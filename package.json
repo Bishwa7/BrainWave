@@ -1,0 +1,28 @@
+{
+  "name": "brainwave",
+  "version": "1.0.0",
+  "description": "BrainWave ,a TypeScript project, is a personal knowledge management application designed to help users store, organize, and retrieve information effortlessly from multiple content sources like - Twitter, YouTube, Google Docs, and more — all in one centralized hub. Second Brain enables users to build a personal digital repository that grows with them over time.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bishwa7/BrainWave.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Bishwa7/BrainWave/issues"
+  },
+  "homepage": "https://github.com/Bishwa7/BrainWave#readme",
+  "devDependencies": {
+    "@types/express": "^5.0.5",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
