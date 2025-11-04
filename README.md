@@ -134,6 +134,7 @@ app.listen(3000)
 
 <br/><br/>
 
+
 ### Step 3 -
 - added express routing for user, content and public routes
 
@@ -211,3 +212,62 @@ publicRouter.get("/:shareLink", (req, res) => {
 
 export default publicRouter;
 ```
+
+<br/><br/>
+
+
+
+### Step 4 - 
+- defining the user Schema and model in db.ts
+- connecting moongoose in index.ts with dotenv
+
+dependencies
+```
+npm install mongoose dotenv
+```
+
+db.ts
+```typescript
+import {Schema, model} from "mongoose"
+
+
+const userSchema = new Schema({
+    email: {type: String, required: true, unique: true},
+    userName: {type: String, required: true},
+    password: {type: String, required: true}
+})
+
+
+
+export const userModel = model("user", userSchema)
+```
+
+index.ts
+```typescript
+import dotenv from "dotenv"
+dotenv.config()
+import mongoose from "mongoose"
+
+
+async function main(){
+    if (!process.env.MONGO_URL) {
+    throw new Error("MONGO_URL not found in .env file");
+  }
+
+  await mongoose.connect(process.env.MONGO_URL);
+  console.log("Connected to MongoDB");
+
+  app.listen(3000, () => {
+    console.log("Server running on port 3000");
+  });
+}
+
+main().catch(err => console.log(err));
+```
+
+.env.example
+```
+MONGO_URL = mongodb://[username:password@]host1[:port1][,...hostN[:portN]]/[defaultauthdb]
+```
+
+<br/><br/>
