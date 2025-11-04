@@ -132,3 +132,82 @@ app.get("/api/v1/brain/:shareLink", (req, res) => {
 app.listen(3000)
 ```
 
+<br/><br/>
+
+### Step 3 -
+- added express routing for user, content and public routes
+
+index.ts
+```typescript
+import express from "express"
+import userRouter from "./routes/user.js"
+import contentRouter from "./routes/content.js"
+import publicRouter from "./routes/public.js"
+
+const app = express()
+app.use(express.json())
+
+app.use("/api/v1/user", userRouter)
+app.use("/api/v1/content", contentRouter)
+app.use("/api/v1/brain", publicRouter)
+
+
+app.listen(3000)
+```
+
+user.ts
+```typescript
+import { Router } from "express";
+const userRouter = Router();
+
+userRouter.post("/signup", (req, res) => {
+    res.json({
+        message: "You are signed up"
+    })
+})
+
+userRouter.post("/signin", (req, res) => {
+    res.json({
+        message: "You are signed in"
+    })
+})
+
+export default userRouter;
+```
+
+content.ts
+```typescript
+import {Router} from "express"
+const contentRouter = Router()
+
+contentRouter.post("/add", (req, res) => {
+
+})
+
+contentRouter.get("/fetch", (req, res) => {
+
+})
+
+contentRouter.delete("/delete", (req, res) => {
+
+})
+
+contentRouter.post("/share", (req, res) => {
+
+})
+
+export default contentRouter;
+```
+
+public.ts
+```typescript
+import {Router} from "express"
+const publicRouter = Router()
+
+publicRouter.get("/:shareLink", (req, res) => {
+
+})
+
+
+export default publicRouter;
+```

@@ -1,40 +1,14 @@
 import express from "express"
+import userRouter from "./routes/user.js"
+import contentRouter from "./routes/content.js"
+import publicRouter from "./routes/public.js"
+
 const app = express()
 app.use(express.json())
 
-app.post("/api/v1/signup", (req, res) => {
-
-})
-
-
-app.post("/api/v1/signin", (req, res) => {
-    
-})
-
-
-app.post("/api/v1/content", (req, res) => {
-    
-})
-
-
-app.get("/api/v1/content", (req, res) => {
-    
-})
-
-
-app.delete("/api/v1/signup", (req, res) => {
-    
-})
-
-
-app.post("/api/v1/brain/share", (req, res) => {
-    
-})
-
-
-app.get("/api/v1/brain/:shareLink", (req, res) => {
-    
-})
+app.use("/api/v1/user", userRouter)
+app.use("/api/v1/content", contentRouter)
+app.use("/api/v1/brain", publicRouter)
 
 
 app.listen(3000)
