@@ -43,5 +43,6 @@
 
     "moduleResolution": "NodeNext", 
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
   }
 }
