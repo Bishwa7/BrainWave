@@ -423,3 +423,123 @@ JWT_SECRET_USER = ExampleStringforJWT
 
 
 <br/><br/>
+
+
+
+### Step 6 - 
+- route for adding content in routes/content.ts (modification needed)
+- contentSchema added in models/db.ts (modification needed)
+- userAuthMiddleware added in middlewares/userAuthMiddleware.ts (modification needed)
+
+
+routes/content.ts - 
+```typescript
+import {Router} from "express"
+import { userAuthMiddleware } from "../middlewares/userAuthMiddleware.js"
+import { contentModel } from "../models/db.js"
+const contentRouter = Router()
+
+contentRouter.post("/add", userAuthMiddleware, async (req, res) => {
+    const { title, link} = req.body;
+
+    try{
+        await contentModel.create({
+            title,
+            link,
+            // type,
+            //@ts-ignore
+            userId: req.userId,
+            tags:[]
+        })
+
+        res.status(201).json({
+            message:"Content added"
+        })
+    }
+    catch(err)
+    {
+        console.log(err)
+        res.json({
+            message:"db error while adding content"
+        })
+    }    
+})
+```
+
+models/db.ts - 
+```typescript
+// const contentTypes = ['image','video','article','audio'];
+
+const contentSchema = new Schema({
+    title: {type: String, required: true},
+    link: {type: String, required: true},
+    // type: {type: String, enum: contentTypes, required: true},
+    tags: [{type: ObjectId, ref: 'Tag'}],
+    userId: {type: ObjectId, ref: 'User', required: true}
+})
+
+export const contentModel = model("Content", contentSchema)
+```
+
+middlewares/userAuthMiddleware.ts - 
+```typescript
+import jwt from "jsonwebtoken"
+import { JWT_SECRET_USER } from "../config/config.js"
+import type { NextFunction, Request, Response } from "express"
+
+export const userAuthMiddleware = (req: Request, res: Response, next: NextFunction) =>
+{
+    const authHeader = req.headers["authorization"];
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        return res
+        .status(401)
+        .json({ message: "Authorization header is missing or malformed" });
+    }
+
+    // if(authHeader){
+    //     const token = authHeader.split(" ")[1];
+
+    //     jwt.verify(token!, JWT_SECRET_USER!, (err, decoded)=>{
+    //         if(err)
+    //         {
+    //             res.status(401).send({
+    //                 message: "unauthorized1"
+    //             })
+    //         }
+    //         else{
+    //             //@ts-ignore
+    //             req.userId = decoded.id;
+    //             next();
+    //         }
+    //     })
+    // }
+    // else{
+    //     res.status(401).send({
+    //         message: "unauthorized2"
+    //     })
+    // }
+
+    const token = authHeader.split(" ")[1];
+    try {
+        const decoded = jwt.verify(token! ,JWT_SECRET_USER!) //as { id?: string };
+
+        //@ts-ignore
+        if (!decoded.id) {
+        return res.status(403).json({ message: "Invalid token payload" });
+        }
+
+        //@ts-ignore
+        req.userId = decoded.id;
+        next();
+    } 
+    catch (err) 
+    {
+        return res.status(403).json({ message: "Invalid or expired token" });
+    }
+
+}
+```
+
+<br/><br/>
+
