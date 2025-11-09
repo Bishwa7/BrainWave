@@ -160,7 +160,9 @@ export const PlusIcon = (props : iconProps) => {
 
 - using Button component from Button.tsx
 - using PlusIcon from PlusIcon.tsx
+
 src/App.tsx
+
 ```typescript
 import "./index.css"
 import { Button } from './components/ui/Button'

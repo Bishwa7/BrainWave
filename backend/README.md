@@ -576,3 +576,178 @@ contentRouter.delete("/delete", userAuthMiddleware, async (req, res) => {
 
 <br/><br/>
 
+### Step 8 - 
+- removed //@ts-ignore from ./routes/content.ts
+- removed //@ts-ignore from ./middlewares/userAuthMiddleware.ts
+
+Note- to remove the //@ts-ignore from ./routes/content.ts and ./middlewares/userAuthMiddleware.ts, we need to override the types of Request which are imported from express in userAuthMiddleware. <br/>
+
+Following code added for overriding types of Request in ./routes/content.ts because userAuthMiddleware used in this files routes
+```typescript
+declare global {
+  namespace Express {
+    export interface Request {
+      userId?: string;
+    }
+  }
+}
+```
+
+
+<br/>
+
+./routes/content.ts
+```typescript
+declare global {
+  namespace Express {
+    export interface Request {
+      userId?: string;
+    }
+  }
+}
+
+import {Router} from "express"
+import { userAuthMiddleware } from "../middlewares/userAuthMiddleware.js"
+import { contentModel } from "../models/db.js"
+const contentRouter = Router()
+
+
+contentRouter.post("/add", userAuthMiddleware, async (req, res) => {
+    const { title, link} = req.body;
+
+    try{
+        await contentModel.create({
+            title,
+            link,
+            // type,
+            userId: req.userId,
+            tags:[]
+        })
+
+        res.status(201).json({
+            message:"Content added"
+        })
+    }
+    catch(err)
+    {
+        console.log(err)
+        res.json({
+            message:"db error while adding content"
+        })
+    }    
+})
+
+
+contentRouter.get("/fetch", userAuthMiddleware, async (req, res) => {
+    
+    const userId = req.userId
+    
+    try{
+        const content = await contentModel.find({
+            userId: userId
+        }).populate("userId", "userName")
+
+        res.json({
+            content
+        })
+    }
+    catch(err)
+    {
+        console.log(err)
+        res.json({
+            message:"db error while fetching data from contentModel"
+        })
+    }
+})
+
+
+contentRouter.delete("/delete", userAuthMiddleware, async (req, res) => {
+
+    const contentId = req.body.contentId    
+    const userId = req.userId
+
+    try{
+        await contentModel.deleteMany({
+            _id: contentId,
+            userId: userId
+        })
+
+        res.json({
+            message: "Content Deleted"
+        })
+    }
+    catch(err)
+    {
+        console.log(err)
+        res.json({
+            message:"db error while deleting content"
+        })
+    }
+})
+
+
+contentRouter.post("/share", (req, res) => {
+
+})
+
+export default contentRouter;
+```
+
+
+./middlewares/userAuthMiddleware.ts
+```typescript
+import jwt from "jsonwebtoken"
+import { JWT_SECRET_USER } from "../config/config.js"
+import type { NextFunction, Request, Response } from "express"
+
+
+export const userAuthMiddleware = (req: Request, res: Response, next: NextFunction) =>
+{
+    const authHeader = req.headers["authorization"];
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        return res
+        .status(401)
+        .json({ message: "Authorization header is missing or malformed" });
+    }
+
+    // if(authHeader){
+    //     const token = authHeader.split(" ")[1];
+
+    //     jwt.verify(token!, JWT_SECRET_USER!, (err, decoded)=>{
+    //         if(err)
+    //         {
+    //             res.status(401).send({
+    //                 message: "unauthorized1"
+    //             })
+    //         }
+    //         else{
+    //             //@ts-ignore
+    //             req.userId = decoded.id;
+    //             next();
+    //         }
+    //     })
+    // }
+    // else{
+    //     res.status(401).send({
+    //         message: "unauthorized2"
+    //     })
+    // }
+
+    const token = authHeader.split(" ")[1];
+    try {
+        const decoded = jwt.verify(token! ,JWT_SECRET_USER!) as { id?: string };
+
+        if (!decoded.id) {
+        return res.status(403).json({ message: "Invalid token payload" });
+        }
+        
+        req.userId = decoded.id;
+        next();
+    } 
+    catch (err) 
+    {
+        return res.status(403).json({ message: "Invalid or expired token" });
+    }
+}
+```

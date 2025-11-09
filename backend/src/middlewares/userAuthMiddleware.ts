@@ -40,14 +40,13 @@ export const userAuthMiddleware = (req: Request, res: Response, next: NextFuncti
 
     const token = authHeader.split(" ")[1];
     try {
-        const decoded = jwt.verify(token! ,JWT_SECRET_USER!) //as { id?: string };
+        const decoded = jwt.verify(token! ,JWT_SECRET_USER!) as { id?: string };
 
-        //@ts-ignore
+        
         if (!decoded.id) {
         return res.status(403).json({ message: "Invalid token payload" });
         }
-
-        //@ts-ignore
+        
         req.userId = decoded.id;
         next();
     } 
