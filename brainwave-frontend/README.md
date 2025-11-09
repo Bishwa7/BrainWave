@@ -73,6 +73,7 @@ src/components/ui/Buttons.tsx
 
 ```typescript
 import "../../index.css"
+import type { ReactElement } from "react"
 
 type variants = "primary" | "secondary"
 type sizes = "sm" | "md" | "lg"
@@ -81,8 +82,8 @@ interface ButtonProps {
     variant: variants,
     size: sizes,
     text: string,
-    startIcon?: any,
-    endIcon?: any,
+    startIcon?: ReactElement,
+    endIcon?: ReactElement,
     onClick: () => void
 }
 
@@ -109,7 +110,7 @@ const sizeStyles : sizeStruc ={
 
 export const Button = (props : ButtonProps) => {
     return <button className={`${variantStyles[props.variant]} ${defaultStyles} ${sizeStyles[props.size]}`} onClick={()=> {}}>
-        <div className="flex">
+        <div className="flex items-center">
             {props.startIcon? <div className="pr-2">{props.startIcon}</div> : null}
             {props.text}
             {props.endIcon}
@@ -170,13 +171,12 @@ function App() {
 
   return (
     <>
-      <Button variant='secondary' size='sm' startIcon={<PlusIcon size="md"/>} text='Share' onClick={()=>{}}></Button>
-      <Button variant='secondary' size='md' text='medium' onClick={()=>{}}></Button>
-      <Button variant='primary' size='lg' text='Add Content' onClick={()=>{}}></Button>
+      <Button variant='secondary' size='sm' startIcon={<PlusIcon size="sm"/>} text='Small' onClick={()=>{}}></Button>
+      <Button variant='secondary' size='md' startIcon={<PlusIcon size="md"/>} text='Medium' onClick={()=>{}}></Button>
+      <Button variant='primary' size='lg' startIcon={<PlusIcon size="lg"/>} text='Large' onClick={()=>{}}></Button>
     </>
   )
 }
 
 export default App
-
 ```

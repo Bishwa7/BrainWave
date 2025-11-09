@@ -1,3 +1,4 @@
+import type { ReactElement } from "react"
 import "../../index.css"
 
 type variants = "primary" | "secondary"
@@ -7,8 +8,8 @@ interface ButtonProps {
     variant: variants,
     size: sizes,
     text: string,
-    startIcon?: any,
-    endIcon?: any,
+    startIcon?: ReactElement,
+    endIcon?: ReactElement,
     onClick: () => void
 }
 
@@ -38,7 +39,7 @@ const sizeStyles : sizeStruc ={
 
 export const Button = (props : ButtonProps) => {
     return <button className={`${variantStyles[props.variant]} ${defaultStyles} ${sizeStyles[props.size]}`} onClick={()=> {}}>
-        <div className="flex">
+        <div className="flex items-center">
             {props.startIcon? <div className="pr-2">{props.startIcon}</div> : null}
             {props.text}
             {props.endIcon}
