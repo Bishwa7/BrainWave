@@ -105,25 +105,51 @@ contentRouter.post("/share", userAuthMiddleware, async (req, res) => {
     if(share)
     {
         try{
-            await linkModel.create({
-                hash: randomGenerator(10),
+            const alreadyShared = await linkModel.findOne({
                 userId: req.userId
+            })
+
+            if(alreadyShared)
+            {
+                res.json({
+                    hash: alreadyShared.hash
+                })
+
+                return;
+            }
+
+
+            const hash = randomGenerator(10)
+
+            await linkModel.create({
+                hash: hash,
+                userId: req.userId
+            })
+
+            res.json({hash})
+        }
+        catch(err)
+        {
+            res.json({err})
+        }
+
+        
+    }
+    else{
+        try{
+            await linkModel.deleteOne({
+                userId: req.userId
+            })
+
+            res.json({
+                message: "Deleted Shareable Link"
             })
         }
         catch(err)
         {
-            res.json({message: "Probably user already exists", err})
+            res.json({message:"Probaly already deleted shared link", err})
         }
     }
-    else{
-        await linkModel.deleteOne({
-            userId: req.userId
-        })
-    }
-
-    res.json({
-        message: "Updated sharable link"
-    })
 })
 
 
