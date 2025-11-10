@@ -751,3 +751,74 @@ export const userAuthMiddleware = (req: Request, res: Response, next: NextFuncti
     }
 }
 ```
+
+<br/><br/>
+
+
+### Step 9 - 
+- added content share route in ./src/routes/content.ts
+- added linkSchema (for content share route) in ./src/models/db.ts
+- added random string generator in ./src/utils/utils.ts (used in content share route)
+
+./src/routes/content.ts
+```typescript
+import { contentModel, linkModel } from "../models/db.js"
+import { randomGenerator } from "../utils/utils.js";
+
+contentRouter.post("/share", userAuthMiddleware, async (req, res) => {
+
+    const {share} = req.body;
+
+    if(share)
+    {
+        try{
+            await linkModel.create({
+                hash: randomGenerator(10),
+                userId: req.userId
+            })
+        }
+        catch(err)
+        {
+            res.json({message: "Probably user already exists", err})
+        }
+    }
+    else{
+        await linkModel.deleteOne({
+            userId: req.userId
+        })
+    }
+
+    res.json({
+        message: "Updated sharable link"
+    })
+})
+```
+
+
+./src/models/db.ts
+```typescript
+const linkShema = new Schema({
+    hash: String,
+    userId: {type: ObjectId, ref: 'User', required: true, unique: true}
+})
+
+export const linkModel = model("Links", linkShema)
+```
+
+
+./src/utils/utils.ts
+```typescript
+export const randomGenerator = (len: number) => {
+
+    let options = "randomStirng10Bishwa7RoanldoGeneratorOptions75e987w7e87sdcvh2VUIK77y87"
+    let length = options.length
+    let ans = ""
+
+    for(let i=0; i<len; i++)
+    {
+        ans += options[Math.floor(Math.random() * length)]
+    }
+
+    return ans
+}
+```

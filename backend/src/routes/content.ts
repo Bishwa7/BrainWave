@@ -11,7 +11,8 @@ declare global {
 
 import {Router} from "express"
 import { userAuthMiddleware } from "../middlewares/userAuthMiddleware.js"
-import { contentModel } from "../models/db.js"
+import { contentModel, linkModel } from "../models/db.js"
+import { randomGenerator } from "../utils/utils.js";
 
 const contentRouter = Router()
 
@@ -97,8 +98,34 @@ contentRouter.delete("/delete", userAuthMiddleware, async (req, res) => {
 
 
 
-contentRouter.post("/share", (req, res) => {
+contentRouter.post("/share", userAuthMiddleware, async (req, res) => {
 
+    const {share} = req.body;
+
+    if(share)
+    {
+        try{
+            await linkModel.create({
+                hash: randomGenerator(10),
+                userId: req.userId
+            })
+        }
+        catch(err)
+        {
+            res.json({message: "Probably user already exists", err})
+        }
+    }
+    else{
+        await linkModel.deleteOne({
+            userId: req.userId
+        })
+    }
+
+    res.json({
+        message: "Updated sharable link"
+    })
 })
+
+
 
 export default contentRouter;
