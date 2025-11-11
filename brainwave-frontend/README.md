@@ -194,3 +194,111 @@ export const ShareIcon = (props: iconProps) =>{
 </svg>
 }
 ```
+
+<br/><br/>
+
+
+### Step 3 - 
+- added generic Card component
+- added twitter's embed script
+
+
+./src/components/ui/Card.tsx
+```typescript
+import { PlusIcon } from "../../icons/PlusIcon"
+import { ShareIcon } from "../../icons/ShareIcon"
+
+interface CardProps {
+    title: string,
+    link: string,
+    type: "twitter" | "youtube"
+}
+
+const defaultStyles = "p-4 bg-white rounded-lg shadow-md border-gray-200 max-w-72 border min-w-72"
+
+
+export function Card (props : CardProps){
+
+    const { title, link, type } = props;
+
+    return <>
+    <div className={`${defaultStyles}`}>
+        <div className="flex justify-between">
+            <div className="flex items-center">
+                <div className="pr-2 text-gray-500">
+                    <PlusIcon size="md"/>
+                </div>
+                
+                {title}
+            </div>
+            <div className="flex items-center text-gray-500">
+                <div className="pr-2">
+                    <a href={link} target="_blank" className="cursor-pointer">
+                        <ShareIcon size="md" />
+                    </a>
+                </div>
+                
+                <ShareIcon size="md" />
+            </div>
+        </div>
+
+        <div className="pt-4">
+
+            {type === "youtube" && <iframe className="w-full" src={link.replace("watch","embed").replace("?v=","/").replace(/&.*/, "")} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>}
+            
+
+            {type === "twitter" && (
+                <div className="overflow-y-auto max-h-72">
+                    <blockquote className="twitter-tweet">
+                        <a href={link.replace("x.com","twitter.com")}></a> 
+                    </blockquote>
+                </div>
+            )}
+            
+        </div>
+        
+    </div>
+    </>
+}
+```
+
+index.html
+```html
+<!-- to embed twitter posts -->
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+```
+
+
+./src/App.tsx
+```typescript
+import "./index.css"
+import { Button } from './components/ui/Button'
+import { PlusIcon } from "./icons/PlusIcon"
+import { ShareIcon } from "./icons/ShareIcon"
+import { Card } from "./components/ui/Card"
+
+function App() {
+  
+  return (
+    <div className="p-4">
+      <div className="flex justify-end gap-4">
+        <Button variant='secondary' size='lg' startIcon={<PlusIcon size="md"/>} text='Share Brain' onClick={()=>alert("Clicked")}></Button>
+        <Button variant='primary' size='lg' startIcon={<ShareIcon size="md"/>} text='Add Content' onClick={()=>alert("Clicked")}></Button>
+      </div>
+      
+
+      <div className="flex gap-4 p-6">
+        <Card title="Fisrt card" type="youtube" link="https://www.youtube.com/watch?v=Uu2FQ2hW4_o" />
+        <Card title="Fisrt card" type="youtube" link="https://www.youtube.com/watch?v=wsHt2YReQzA&t=6s" />
+        
+        <Card title="Second card" type="twitter" link="https://x.com/BishwaP5/status/1811428154327634194?s=20" />
+        <Card title="Second card" type="twitter" link="https://x.com/merishabh_singh/status/1987919007903879417?s=20" />
+        
+      </div>
+      
+    </div>
+  )
+}
+
+export default App
+```
