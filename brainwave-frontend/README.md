@@ -52,6 +52,8 @@ npm run dev
 - creating generic button component (ui library)
 - added config.tsx for icons
 - added custom colors
+- added ShareIcon.tsx
+
 <br/>
 
 - added custom colors
@@ -166,18 +168,29 @@ src/App.tsx
 import "./index.css"
 import { Button } from './components/ui/Button'
 import { PlusIcon } from "./icons/PlusIcon"
+import { ShareIcon } from "./icons/ShareIcon"
 
 function App() {
   
-
   return (
     <>
       <Button variant='secondary' size='sm' startIcon={<PlusIcon size="sm"/>} text='Small' onClick={()=>alert("Clicked")}></Button>
       <Button variant='secondary' size='md' startIcon={<PlusIcon size="md"/>} text='Medium' onClick={()=>alert("Clicked")}></Button>
-      <Button variant='primary' size='lg' startIcon={<PlusIcon size="lg"/>} text='Large' onClick={()=>alert("Clicked")}></Button>
+      <Button variant='primary' size='lg' startIcon={<ShareIcon size="md"/>} text='Large' onClick={()=>alert("Clicked")}></Button>
     </>
   )
 }
 
 export default App
+```
+
+- added ShareIcon.tsx
+```typescript
+import { iconSizeStyles, type iconProps } from "./config"
+
+export const ShareIcon = (props: iconProps) =>{
+    return <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className={iconSizeStyles[props.size]}>
+  <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
+</svg>
+}
 ```
