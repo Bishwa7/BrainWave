@@ -302,3 +302,120 @@ function App() {
 
 export default App
 ```
+
+<br/><br/>
+
+
+### Step 4 - 
+- added CreateContentModal
+- added ./src/icons/CloseIcon.tsx
+- added ./src/components/InputComp.tsx (Custon Input Component)
+
+
+./src/icons/CloseIcon.tsx
+```typescript
+import { iconSizeStyles, type iconProps } from "./config";
+
+export function CloseIcon(props : iconProps){
+
+    return <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className={iconSizeStyles[props.size]}>
+  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+</svg>
+}
+```
+
+./src/components/InputComp.tsx
+```typescript
+interface InputCompProps {
+    onChange: ()=> void;
+    placeholder?: string;
+}
+
+
+export function InputComp({onChange, placeholder}: InputCompProps ){
+
+    return <div>
+        <input type="text" placeholder={placeholder} className="px-4 py-2 border m-2 rounded-md" onChange={onChange}></input>
+    </div>
+}
+```
+
+<br/>
+
+./src/components/ui/CreateContentModal.tsx
+```typescript
+import { CloseIcon } from "../../icons/CloseIcon";
+import { InputComp } from "../InputComp";
+import { Button } from "./Button";
+
+
+interface CreateContentModalProps {
+    open: boolean;
+    onClose: ()=>void;
+}
+
+export function CreateContentModal ({open, onClose}: CreateContentModalProps){
+
+    return <div>
+        {open && <div className="w-screen h-screen bg-slate-600/80 fixed top-0 left-0 flex justify-center items-center">
+            
+            <div className="bg-white p-4 rounded-lg">
+                <div className="flex justify-end">
+                    <div onClick={onClose} className="cursor-pointer">
+                        <CloseIcon size="lg" />
+                    </div>
+                </div>
+                <div>
+                    <InputComp placeholder="title" onChange={()=>{}} />
+                    <InputComp placeholder="Link" onChange={()=>{}} />
+                </div>
+                <div className="flex justify-center">
+                    <Button variant="primary" text="Submit" size="md" onClick={() => alert("Submitted")}></Button>
+                </div>
+            </div>
+        
+        </div>}
+    </div>
+}
+```
+
+./src/App.tsx
+```typescript
+import "./index.css"
+import { Button } from './components/ui/Button'
+import { PlusIcon } from "./icons/PlusIcon"
+import { ShareIcon } from "./icons/ShareIcon"
+import { Card } from "./components/ui/Card"
+import { CreateContentModal } from "./components/ui/CreateContentModal"
+import { useState } from "react"
+
+function App() {
+  
+  const [modalOpen, setModalOpen] = useState(false)
+
+  return (
+    <div className="p-4">
+
+      <CreateContentModal open={modalOpen} onClose={() => {setModalOpen(false)}} />
+
+      <div className="flex justify-end gap-4">
+        <Button variant='secondary' size='lg' startIcon={<PlusIcon size="md"/>} text='Share Brain' onClick={()=>alert("Clicked")}></Button>
+        <Button variant='primary' size='lg' startIcon={<ShareIcon size="md"/>} text='Add Content' onClick={()=>{setModalOpen(true)}}></Button>
+      </div>
+      
+
+      <div className="flex gap-4 p-6">
+        <Card title="Fisrt card" type="youtube" link="https://www.youtube.com/watch?v=Uu2FQ2hW4_o" />
+        <Card title="Fisrt card" type="youtube" link="https://www.youtube.com/watch?v=wsHt2YReQzA&t=6s" />
+        
+        <Card title="Second card" type="twitter" link="https://x.com/BishwaP5/status/1811428154327634194?s=20" />
+        <Card title="Second card" type="twitter" link="https://x.com/merishabh_singh/status/1987919007903879417?s=20" />
+        
+      </div>
+      
+    </div>
+  )
+}
+
+export default App
+```
