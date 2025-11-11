@@ -38,7 +38,7 @@ const sizeStyles : sizeStruc ={
 
 
 export const Button = (props : ButtonProps) => {
-    return <button className={`${variantStyles[props.variant]} ${defaultStyles} ${sizeStyles[props.size]}`} onClick={()=> {}}>
+    return <button className={`${variantStyles[props.variant]} ${defaultStyles} ${sizeStyles[props.size]} cursor-pointer`} onClick={props.onClick}>
         <div className="flex items-center">
             {props.startIcon? <div className="pr-2">{props.startIcon}</div> : null}
             {props.text}
