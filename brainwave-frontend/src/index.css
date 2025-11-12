@@ -4,4 +4,7 @@
     --color-brand-300: oklch(0.9296 0.0321 272.27);
     --color-brand-500: oklch(0.4202 0.1717 278.42);
     --color-brand-600: oklch(0.5103 0.2286 277.36);
+    --color-brandgray-100: oklch(0.9494 0.0013 286.37);
+    --color-brandgray-200: oklch(0.9329 0.0063 255.48);
+    --color-brandgray-600: oklch(0.6785 0.0068 255.49);
 }

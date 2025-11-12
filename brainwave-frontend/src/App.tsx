@@ -5,13 +5,18 @@ import { ShareIcon } from "./icons/ShareIcon"
 import { Card } from "./components/ui/Card"
 import { CreateContentModal } from "./components/ui/CreateContentModal"
 import { useState } from "react"
+import { Sidebar } from "./components/ui/Sidebar"
 
 function App() {
   
   const [modalOpen, setModalOpen] = useState(false)
 
   return (
-    <div className="p-4">
+    <div>
+      <div className="border-2">
+        <Sidebar />
+      </div>
+      <div className="p-2 ml-72 min-h-screen bg-brandgray-100">
 
       <CreateContentModal open={modalOpen} onClose={() => {setModalOpen(false)}} />
 
@@ -31,6 +36,9 @@ function App() {
       </div>
       
     </div>
+
+    </div>
+    
   )
 }
 
