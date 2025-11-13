@@ -4,6 +4,7 @@ import { Button } from "../components/ui/Button";
 import { Logo } from "../icons/Logo";
 import { BackendURL } from "../config/config";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 
 export function Signup(){
@@ -11,6 +12,8 @@ export function Signup(){
     const emailRef = useRef<HTMLInputElement>(null);
     const usernameRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
+
+    const navigate = useNavigate();
 
     async function signup(){
         const email = emailRef.current?.value || "";
@@ -24,6 +27,7 @@ export function Signup(){
         })
 
 
+        navigate("/signin")
         alert("You have Signed Up")
     }
 
