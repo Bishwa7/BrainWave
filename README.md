@@ -25,3 +25,152 @@ Will Update after project completion
 
 
 <br/><br/><br/>
+
+
+
+
+
+## Steps to connect Backend & Frontend
+
+### Step 1 - 
+- install cors on backend
+- install react-router-dom on frontend (and add all the pages in App.tsx)
+- Connect Signup.tsx (frontend) to backend
+
+<br/>
+
+- install cors on backend
+```
+cd backend
+
+npm install cors @types/cors
+```
+backend/src/index.ts
+```typescript
+import cors from "cors";
+
+app.use(cors())
+```
+
+<br/>
+
+- install react-router-dom on frontend (and add all the pages in App.tsx)
+
+```
+cd brainwave-frontend
+
+npm react-router-dom
+```
+
+brainwave-frontend/src/App.tsx
+```typescript
+import "./index.css"
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { Signup } from "./pages/Signup"
+import { Signin } from "./pages/Signin"
+import Dashboard from "./pages/Dashboard"
+
+
+function App() {
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/signin" element={<Signin />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Routes>
+    </BrowserRouter>
+  )
+}
+
+export default App
+```
+
+<br/>
+
+- Connect Signup.tsx (frontend) to backend
+
+brainwave-frontend/src/components/InputComp.tsx
+```typescript
+interface InputCompProps {
+    onChange: ()=> void;
+    placeholder?: string;
+    ref?: any
+}
+
+
+export function InputComp({onChange, placeholder, ref}: InputCompProps ){
+
+    return <div>
+        <input type="text" placeholder={placeholder} className="px-4 py-2 border m-2 rounded-md" onChange={onChange} ref={ref}></input>
+    </div>
+}
+```
+
+
+brainwave-frontend/src/config/config.tsx
+```typescript
+export const BackendURL = "http://localhost:3000"
+```
+
+
+brainwave-frontend/src/pages/Signup.tsx
+```typescript
+import { useRef } from "react";
+import { InputComp } from "../components/InputComp";
+import { Button } from "../components/ui/Button";
+import { Logo } from "../icons/Logo";
+import { BackendURL } from "../config/config";
+import axios from "axios";
+
+
+export function Signup(){
+    
+    const emailRef = useRef<HTMLInputElement>(null);
+    const usernameRef = useRef<HTMLInputElement>(null);
+    const passwordRef = useRef<HTMLInputElement>(null);
+
+    async function signup(){
+        const email = emailRef.current?.value || "";
+        const userName = usernameRef.current?.value || "";
+        const password = passwordRef.current?.value || "";
+
+        await axios.post(`${BackendURL}/api/v1/user/signup`, {
+            email,
+            userName,
+            password
+        })
+
+
+        alert("You have Signed Up")
+    }
+
+
+    return (
+        <div className="h-screen w-screen bg-gray-200 flex flex-col justify-center items-center">
+
+            <div className="text-5xl font-bold p-6 text-brand-600 flex items-center">
+                <div className="pr-2 text-brand-600">
+                    <Logo size="xl" />
+                </div>
+                BrainWave
+            </div>
+
+            <div className="bg-white rounded-xl border min-w-96 flex flex-col justify-center items-center p-6 gap-2">
+
+                <div className="text-3xl font-semibold p-2">
+                    SIGN UP
+                </div>
+
+                <InputComp ref={emailRef} placeholder="Email" onChange={()=>{}} /> 
+                <InputComp ref={usernameRef} placeholder="Username" onChange={()=>{}} />
+                <InputComp ref={passwordRef} placeholder="Password" onChange={()=>{}} />
+
+                <Button loading={false} variant="primary" size="lg" text="Signup" onClick={signup} />
+            </div>
+
+        </div>
+    )
+}
+```

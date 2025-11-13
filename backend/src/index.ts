@@ -6,10 +6,13 @@ import userRouter from "./routes/user.js"
 import contentRouter from "./routes/content.js"
 import publicRouter from "./routes/public.js"
 import mongoose from "mongoose"
+import cors from "cors"
 
 
 const app = express()
 app.use(express.json())
+app.use(cors())
+
 
 app.use("/api/v1/user", userRouter)
 app.use("/api/v1/content", contentRouter)

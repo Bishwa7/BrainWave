@@ -1,9 +1,32 @@
+import { useRef } from "react";
 import { InputComp } from "../components/InputComp";
 import { Button } from "../components/ui/Button";
 import { Logo } from "../icons/Logo";
+import { BackendURL } from "../config/config";
+import axios from "axios";
 
 
 export function Signup(){
+    
+    const emailRef = useRef<HTMLInputElement>(null);
+    const usernameRef = useRef<HTMLInputElement>(null);
+    const passwordRef = useRef<HTMLInputElement>(null);
+
+    async function signup(){
+        const email = emailRef.current?.value || "";
+        const userName = usernameRef.current?.value || "";
+        const password = passwordRef.current?.value || "";
+
+        await axios.post(`${BackendURL}/api/v1/user/signup`, {
+            email,
+            userName,
+            password
+        })
+
+
+        alert("You have Signed Up")
+    }
+
 
     return (
         <div className="h-screen w-screen bg-gray-200 flex flex-col justify-center items-center">
@@ -21,11 +44,11 @@ export function Signup(){
                     SIGN UP
                 </div>
 
-                <InputComp placeholder="Email" onChange={()=>{}} /> 
-                <InputComp placeholder="Username" onChange={()=>{}} />
-                <InputComp placeholder="Password" onChange={()=>{}} />
+                <InputComp ref={emailRef} placeholder="Email" onChange={()=>{}} /> 
+                <InputComp ref={usernameRef} placeholder="Username" onChange={()=>{}} />
+                <InputComp ref={passwordRef} placeholder="Password" onChange={()=>{}} />
 
-                <Button loading={false} variant="primary" size="lg" text="Signup" onClick={()=>{}} />
+                <Button loading={false} variant="primary" size="lg" text="Signup" onClick={signup} />
             </div>
 
         </div>
