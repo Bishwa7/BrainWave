@@ -77,8 +77,8 @@ index.css
 src/components/ui/Buttons.tsx
 
 ```typescript
-import "../../index.css"
 import type { ReactElement } from "react"
+import "../../index.css"
 
 type variants = "primary" | "secondary"
 type sizes = "sm" | "md" | "lg"
@@ -89,7 +89,8 @@ interface ButtonProps {
     text: string,
     startIcon?: ReactElement,
     endIcon?: ReactElement,
-    onClick: () => void
+    onClick: () => void,
+    loading?: boolean
 }
 
 
@@ -111,9 +112,8 @@ const sizeStyles : sizeStruc ={
 }
 
 
-
 export const Button = (props : ButtonProps) => {
-    return <button className={`${variantStyles[props.variant]} ${defaultStyles} ${sizeStyles[props.size]} cursor-pointer`} onClick={props.onClick}>
+    return <button className={`${variantStyles[props.variant]} ${defaultStyles} ${sizeStyles[props.size]} ${props.loading ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`} onClick={props.loading ? undefined: props.onClick} disabled={props.loading}>
         <div className="flex items-center">
             {props.startIcon? <div className="pr-2">{props.startIcon}</div> : null}
             {props.text}
@@ -575,4 +575,139 @@ function App() {
 }
 
 export default App
+```
+
+
+
+### Step 6 - 
+- added Signup and Signin pages
+- added Dashboard page
+
+./src/pages/Signup.tsx
+
+```typescript
+import { InputComp } from "../components/InputComp";
+import { Button } from "../components/ui/Button";
+import { Logo } from "../icons/Logo";
+
+
+export function Signup(){
+
+    return (
+        <div className="h-screen w-screen bg-gray-200 flex flex-col justify-center items-center">
+
+            <div className="text-5xl font-bold p-6 text-brand-600 flex items-center">
+                <div className="pr-2 text-brand-600">
+                    <Logo size="xl" />
+                </div>
+                BrainWave
+            </div>
+
+            <div className="bg-white rounded-xl border min-w-96 flex flex-col justify-center items-center p-6 gap-2">
+
+                <div className="text-3xl font-semibold p-2">
+                    SIGN UP
+                </div>
+
+                <InputComp placeholder="Email" onChange={()=>{}} /> 
+                <InputComp placeholder="Username" onChange={()=>{}} />
+                <InputComp placeholder="Password" onChange={()=>{}} />
+
+                <Button loading={false} variant="primary" size="lg" text="Signup" onClick={()=>{}} />
+            </div>
+
+        </div>
+    )
+}
+```
+
+
+
+./src/pages/Signin.tsx
+
+```typescript
+import { InputComp } from "../components/InputComp";
+import { Button } from "../components/ui/Button";
+import { Logo } from "../icons/Logo";
+
+
+export function Signin(){
+
+    return (
+        <div className="h-screen w-screen bg-gray-200 flex flex-col justify-center items-center">
+
+            <div className="text-5xl font-bold p-6 text-brand-600 flex items-center">
+                <div className="pr-2 text-brand-600">
+                    <Logo size="xl" />
+                </div>
+                BrainWave
+            </div>
+
+            <div className="bg-white rounded-xl border min-w-96 flex flex-col justify-center items-center p-6 gap-2">
+
+                <div className="text-3xl font-semibold p-2">
+                    SIGN IN
+                </div>
+
+                <InputComp placeholder="Email" onChange={()=>{}} />
+                <InputComp placeholder="Password" onChange={()=>{}} />
+
+                <Button loading={false} variant="primary" size="lg" text="Signin" onClick={()=>{}} />
+            </div>
+
+        </div>
+    )
+}
+```
+
+
+./src/pages/Dashboard.tsx
+
+
+```typescript
+import "../index.css"
+import { Button } from '../components/ui/Button'
+import { PlusIcon } from "../icons/PlusIcon"
+import { ShareIcon } from "../icons/ShareIcon"
+import { Card } from "../components/ui/Card"
+import { CreateContentModal } from "../components/ui/CreateContentModal"
+import { useState } from "react"
+import { Sidebar } from "../components/ui/Sidebar"
+
+function Dashboard() {
+  
+  const [modalOpen, setModalOpen] = useState(false)
+
+  return (
+    <div>
+      <div className="border-2">
+        <Sidebar />
+      </div>
+      <div className="p-2 ml-72 min-h-screen bg-brandgray-100">
+
+      <CreateContentModal open={modalOpen} onClose={() => {setModalOpen(false)}} />
+
+      <div className="flex justify-end gap-4">
+        <Button variant='secondary' size='lg' startIcon={<PlusIcon size="md"/>} text='Share Brain' onClick={()=>alert("Clicked")}></Button>
+        <Button variant='primary' size='lg' startIcon={<ShareIcon size="md"/>} text='Add Content' onClick={()=>{setModalOpen(true)}}></Button>
+      </div>
+      
+
+      <div className="flex gap-4 p-6">
+        <Card title="Fisrt card" type="youtube" link="https://www.youtube.com/watch?v=Uu2FQ2hW4_o" />
+        <Card title="Fisrt card" type="youtube" link="https://www.youtube.com/watch?v=wsHt2YReQzA&t=6s" />
+        
+        <Card title="Second card" type="twitter" link="https://x.com/BishwaP5/status/1811428154327634194?s=20" />
+        <Card title="Second card" type="twitter" link="https://x.com/merishabh_singh/status/1987919007903879417?s=20" />
+        
+      </div>
+      
+    </div>
+
+    </div>
+    
+  )
+}
+
+export default Dashboard
 ```

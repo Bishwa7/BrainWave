@@ -10,7 +10,8 @@ interface ButtonProps {
     text: string,
     startIcon?: ReactElement,
     endIcon?: ReactElement,
-    onClick: () => void
+    onClick: () => void,
+    loading?: boolean
 }
 
 
@@ -38,7 +39,7 @@ const sizeStyles : sizeStruc ={
 
 
 export const Button = (props : ButtonProps) => {
-    return <button className={`${variantStyles[props.variant]} ${defaultStyles} ${sizeStyles[props.size]} cursor-pointer`} onClick={props.onClick}>
+    return <button className={`${variantStyles[props.variant]} ${defaultStyles} ${sizeStyles[props.size]} ${props.loading ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`} onClick={props.loading ? undefined: props.onClick} disabled={props.loading}>
         <div className="flex items-center">
             {props.startIcon? <div className="pr-2">{props.startIcon}</div> : null}
             {props.text}
